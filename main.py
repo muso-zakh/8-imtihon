@@ -3,6 +3,9 @@ from core.database import Base, engine
 from auth.views import router as auth_router
 from bosh_sahifa.views import router as bosh_router
 from institut.views import router as institut_router
+from institut.views import router2 as rahbariyat_router
+from institut.views import router3 as tuzilma_router
+from institut.views import router4 as tarkibiy_router
 
 app = FastAPI(title="TMSITI API")
 
@@ -10,6 +13,9 @@ app = FastAPI(title="TMSITI API")
 app.include_router(auth_router)
 app.include_router(bosh_router)
 app.include_router(institut_router)
+app.include_router(rahbariyat_router)
+app.include_router(tuzilma_router)
+app.include_router(tarkibiy_router)
 
 @app.get("/")
 async def root():
