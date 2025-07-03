@@ -1,12 +1,22 @@
 from fastapi import FastAPI
-from bosh_sahifa import views as bosh_sahifa_router
-from institut import views as institut_router
+from core.database import Base, engine
+from auth.views import router as auth_router
+from bosh_sahifa.views import router as bosh_router
+from institut.views import router as institut_router
 
-app = FastAPI()
+app = FastAPI(title="TMSITI API")
 
-app.include_router(bosh_sahifa_router.router)
-app.include_router(institut_router.router)
+# Routers
+app.include_router(auth_router)
+app.include_router(bosh_router)
+app.include_router(institut_router)
 
 @app.get("/")
 async def root():
     return {"message": "TMSITI API is running"}
+
+# Create tables on start
+@app.on_event("startup")
+async def startup():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)

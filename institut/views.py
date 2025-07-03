@@ -1,13 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
-from fastapi.responses import FileResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 import os, shutil
 
+from fastapi.responses import JSONResponse
+from starlette.requests import Request
+
 from core.database import get_db
-from core.deps import get_current_superuser
+from core.deps import get_current_user
 from .models import Institut
-from .schemas import InstitutCreate, InstitutRead
+from .schemas import InstitutRead
+
+from fastapi.responses import FileResponse
 
 router = APIRouter(prefix="/institut", tags=["Institut haqida"])
 
@@ -25,7 +29,7 @@ async def create_institut(
     text: str,
     guvonoma: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_superuser),
+    user=Depends(get_current_user),
 ):
     file_path = os.path.join(UPLOAD_DIR, guvonoma.filename)
     with open(file_path, "wb") as buffer:
@@ -37,16 +41,18 @@ async def create_institut(
     await db.refresh(item)
     return item
 
+
 @router.get("/pdf/{id}")
 async def view_pdf(id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Institut).where(Institut.id == id))
     item = result.scalar_one_or_none()
     if not item or not os.path.exists(item.guvonoma):
         raise HTTPException(status_code=404, detail="Fayl topilmadi")
-    return FileResponse(item.guvonoma, media_type="application/pdf")
+    return item.guvonoma
+
 
 @router.delete("/{id}")
-async def delete_institut(id: int, db: AsyncSession = Depends(get_db), user=Depends(get_current_superuser)):
+async def delete_institut(id: int, db: AsyncSession = Depends(get_db), user=Depends(get_current_user)):
     result = await db.execute(select(Institut).where(Institut.id == id))
     item = result.scalar_one_or_none()
     if not item:
