@@ -7,6 +7,9 @@ from institut.views import router2 as rahbariyat_router
 from institut.views import router3 as tuzilma_router
 from institut.views import router4 as tarkibiy_router
 from menyu.views import router5 as menyu_router
+from hujjatlar.views import router6 as hujjatlar_router
+from hujjatlar.views import router7 as standardlar_router
+
 
 app = FastAPI(title="TMSITI API")
 
@@ -18,6 +21,8 @@ app.include_router(institut_router)
 app.include_router(rahbariyat_router)
 app.include_router(tuzilma_router)
 app.include_router(tarkibiy_router)
+app.include_router(hujjatlar_router)
+app.include_router(standardlar_router)
 
 @app.get("/")
 async def root():
