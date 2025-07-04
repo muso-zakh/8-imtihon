@@ -6,11 +6,13 @@ from institut.views import router as institut_router
 from institut.views import router2 as rahbariyat_router
 from institut.views import router3 as tuzilma_router
 from institut.views import router4 as tarkibiy_router
+from menyu.views import router5 as menyu_router
 
 app = FastAPI(title="TMSITI API")
 
 # Routers
 app.include_router(auth_router)
+app.include_router(menyu_router)
 app.include_router(bosh_router)
 app.include_router(institut_router)
 app.include_router(rahbariyat_router)
