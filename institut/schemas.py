@@ -1,9 +1,18 @@
 from pydantic import BaseModel, EmailStr
 from datetime import date
+from typing import Optional
+
+
+# ==== Institut ====
 
 class InstitutBase(BaseModel):
-    malumot: str
-    text: str
+    malumot_uz: str
+    malumot_ru: str
+    malumot_en: str
+
+    text_uz: str
+    text_ru: str
+    text_en: str
 
 class InstitutCreate(InstitutBase):
     pass
@@ -15,27 +24,62 @@ class InstitutRead(InstitutBase):
     class Config:
         orm_mode = True
 
+class InstitutLocalizedOut(BaseModel):
+    id: int
+    malumot: str
+    text: str
+    guvonoma: str
 
-"""rahbariyat"""
+
+
+# ==== Rahbariyat ====
 
 class RahbariyatBase(BaseModel):
-    ish_orni: str
-    full_name: str
+    ish_orni_uz: str
+    ish_orni_ru: str
+    ish_orni_en: str
+
+    full_name_uz: str
+    full_name_ru: str
+    full_name_en: str
+
     qabul_kuni: date
     telefon: str
     email: EmailStr
-    mutaxassisligi: str | None = None  # optional
+
+    mutaxassisligi_uz: Optional[str] = None
+    mutaxassisligi_ru: Optional[str] = None
+    mutaxassisligi_en: Optional[str] = None
 
 class RahbariyatCreate(RahbariyatBase):
     pass
 
 class RahbariyatUpdate(BaseModel):
-    ish_orni: str | None = None
-    full_name: str | None = None
-    qabul_kuni: date | None = None
-    telefon: str | None = None
-    email: EmailStr | None = None
-    mutaxassisligi: str | None = None
+    ish_orni_uz: Optional[str] = None
+    ish_orni_ru: Optional[str] = None
+    ish_orni_en: Optional[str] = None
+
+
+    full_name_uz: Optional[str] = None
+    full_name_ru: Optional[str] = None
+    full_name_en: Optional[str] = None
+
+    qabul_kuni: Optional[date] = None
+    telefon: Optional[str] = None
+    email: Optional[EmailStr] = None
+
+    mutaxassisligi_uz: Optional[str] = None
+    mutaxassisligi_ru: Optional[str] = None
+    mutaxassisligi_en: Optional[str] = None
+
+class RahbariyatLocalizedOut(BaseModel):
+    id: int
+    ish_orni: str
+    full_name: str
+    qabul_kuni: date
+    telefon: str
+    email: str
+    mutaxassisligi: str
 
 class RahbariyatOut(RahbariyatBase):
     id: int
@@ -44,16 +88,22 @@ class RahbariyatOut(RahbariyatBase):
         orm_mode = True
 
 
-
-"""tashkiliy_tuzilma"""
-
-from pydantic import BaseModel
+# ==== Tashkiliy Tuzilma ====
 
 class TashkiliyTuzilmaBase(BaseModel):
-    desc: str
+    desc_uz: str
+    desc_ru: str
+    desc_en: str
 
 class TashkiliyTuzilmaCreate(TashkiliyTuzilmaBase):
-    pass  
+    pass
+
+
+class TashkiliyTuzilmaLocalizedOut(BaseModel):
+    id: int
+    desc: str
+    tuzilma: str 
+
 
 class TashkiliyTuzilmaRead(TashkiliyTuzilmaBase):
     id: int
@@ -63,26 +113,42 @@ class TashkiliyTuzilmaRead(TashkiliyTuzilmaBase):
         orm_mode = True
 
 
-
-"""tarkibiy_bolinma"""
-
-from pydantic import BaseModel, EmailStr
-from typing import Optional
+# ==== Tarkibiy Bo‘linma ====
 
 class TarkibiyBolinmaBase(BaseModel):
-    ish_orni: str
+    ish_orni_uz: str
+    ish_orni_ru: str
+    ish_orni_en: str
+
     full_name: str
+
+
     telefon: str
     email: EmailStr
 
 class TarkibiyBolinmaCreate(TarkibiyBolinmaBase):
-    pass  # Fayl (rasm) alohida qo‘shiladi (FastAPI UploadFile orqali)
+    pass  # Fayl (rasm) UploadFile orqali
 
 class TarkibiyBolinmaUpdate(BaseModel):
-    ish_orni: Optional[str] = None
+    ish_orni_uz: Optional[str] = None
+    ish_orni_ru: Optional[str] = None
+    ish_orni_en: Optional[str] = None
+
     full_name: Optional[str] = None
+
+
     telefon: Optional[str] = None
     email: Optional[EmailStr] = None
+
+
+class TarkibiyBolinmaLocalizedOut(BaseModel):
+    id: int
+    ish_orni: str
+    full_name: str
+    telefon: str
+    email: str
+    rasm: str
+
 
 class TarkibiyBolinmaOut(TarkibiyBolinmaBase):
     id: int
@@ -90,5 +156,3 @@ class TarkibiyBolinmaOut(TarkibiyBolinmaBase):
 
     class Config:
         orm_mode = True
-
-
