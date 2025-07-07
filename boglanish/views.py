@@ -5,6 +5,8 @@ from fastapi.responses import FileResponse
 import os, shutil
 from datetime import datetime
 
+from check_admin import admin_required
+
 from core.database import get_db
 from core.deps import get_current_user
 from .models import Boglanish
@@ -35,7 +37,7 @@ def get_localized_fields(obj, lang: str):
 
 
 @router19.get("/", response_model=list[BoglanishLocalizedOut])
-async def get_all(lang: str = Query("uz", enum=["uz", "ru", "en"]), db: AsyncSession = Depends(get_db), user=Depends(get_current_user)):
+async def get_all(lang: str = Query("uz", enum=["uz", "ru", "en"]), db: AsyncSession = Depends(get_db), user=Depends(admin_required)):
     result = await db.execute(select(Boglanish))
     items = result.scalars().all()
     return [get_localized_fields(item, lang) for item in items]
@@ -55,7 +57,8 @@ async def create_item(
     text_ru: str,
     text_en: str,
     fayl: UploadFile = File(...),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
+    user=Depends(get_current_user)
 ):
     file_path = os.path.join(UPLOAD_DIR, fayl.filename)
     with open(file_path, "wb") as buffer:
@@ -83,7 +86,7 @@ async def create_item(
 
 
 @router19.get("/{id}", response_model=BoglanishLocalizedOut)
-async def get_by_id(id: int, lang: str = "uz", db: AsyncSession = Depends(get_db), user=Depends(get_current_user)):
+async def get_by_id(id: int, lang: str = "uz", db: AsyncSession = Depends(get_db), user=Depends(admin_required)):
     result = await db.execute(select(Boglanish).where(Boglanish.id == id))
     item = result.scalar_one_or_none()
     if not item:
@@ -96,7 +99,7 @@ async def update_item(
     id: int,
     data: BoglanishUpdate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    # user=Depends(admin_required)
 ):
     result = await db.execute(select(Boglanish).where(Boglanish.id == id))
     item = result.scalar_one_or_none()
@@ -115,7 +118,7 @@ async def update_item(
 async def delete_item(
     id: int,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Boglanish).where(Boglanish.id == id))
     item = result.scalar_one_or_none()
@@ -131,7 +134,7 @@ async def delete_item(
 
 
 @router19.get("/download/{id}")
-async def download_file(id: int, db: AsyncSession = Depends(get_db), user=Depends(get_current_user)):
+async def download_file(id: int, db: AsyncSession = Depends(get_db), user=Depends(admin_required)):
     result = await db.execute(select(Boglanish).where(Boglanish.id == id))
     item = result.scalar_one_or_none()
     if not item or not os.path.exists(item.fayl):

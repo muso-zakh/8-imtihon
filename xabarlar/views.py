@@ -6,6 +6,8 @@ import os, shutil
 
 from datetime import datetime, date
 
+from check_admin import admin_required
+
 from core.database import get_db
 from core.deps import get_current_user
 from .models import Elon, Yangilik, Uchrashuv, Tadbir, XalqaroHamkorlik, SeminarKorgazma, Korrupsiya
@@ -60,7 +62,7 @@ async def create_elon(
     desc_en: str = "",
     rasm: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     file_path = os.path.join(UPLOAD_DIR, rasm.filename)
     with open(file_path, "wb") as buffer:
@@ -106,7 +108,7 @@ async def update_elon(
     id: int,
     data: ElonUpdate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Elon).where(Elon.id == id))
     item = result.scalar_one_or_none()
@@ -125,7 +127,7 @@ async def update_elon(
 async def delete_elon(
     id: int,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Elon).where(Elon.id == id))
     item = result.scalar_one_or_none()
@@ -194,7 +196,7 @@ async def create_yangilik(
     desc_en: str = "",
     rasm: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     file_path = os.path.join(UPLOAD_DIR, rasm.filename)
     with open(file_path, "wb") as buffer:
@@ -238,7 +240,7 @@ async def update_yangilik(
     id: int,
     data: YangilikUpdate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Yangilik).where(Yangilik.id == id))
     item = result.scalar_one_or_none()
@@ -258,7 +260,7 @@ async def update_yangilik(
 async def delete_yangilik(
     id: int,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Yangilik).where(Yangilik.id == id))
     item = result.scalar_one_or_none()
@@ -331,7 +333,7 @@ async def create_uchrashuv(
     date: datetime = Form(...),  # ISO format: "2025-07-10T14:00:00"
     rasm: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     file_path = os.path.join(UPLOAD_DIR, rasm.filename)
     with open(file_path, "wb") as buffer:
@@ -374,7 +376,7 @@ async def update_uchrashuv(
     id: int,
     data: UchrashuvUpdate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Uchrashuv).where(Uchrashuv.id == id))
     item = result.scalar_one_or_none()
@@ -394,7 +396,7 @@ async def update_uchrashuv(
 async def delete_uchrashuv(
     id: int,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Uchrashuv).where(Uchrashuv.id == id))
     item = result.scalar_one_or_none()
@@ -466,7 +468,7 @@ async def create_tadbir(
     date: datetime = Form(...),
     rasm: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     file_path = os.path.join(UPLOAD_DIR, rasm.filename)
     with open(file_path, "wb") as buffer:
@@ -505,7 +507,7 @@ async def update_tadbir(
     id: int,
     data: TadbirUpdate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Tadbir).where(Tadbir.id == id))
     item = result.scalar_one_or_none()
@@ -524,7 +526,7 @@ async def update_tadbir(
 async def delete_tadbir(
     id: int,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Tadbir).where(Tadbir.id == id))
     item = result.scalar_one_or_none()
@@ -588,7 +590,7 @@ async def create_item(
     date: datetime = Form(...),
     rasm: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     file_path = os.path.join(UPLOAD_DIR, rasm.filename)
     with open(file_path, "wb") as buffer:
@@ -624,7 +626,7 @@ async def update_item(
     id: int,
     data: XalqaroHamkorlikUpdate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(XalqaroHamkorlik).where(XalqaroHamkorlik.id == id))
     item = result.scalar_one_or_none()
@@ -643,7 +645,7 @@ async def update_item(
 async def delete_item(
     id: int,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(XalqaroHamkorlik).where(XalqaroHamkorlik.id == id))
     item = result.scalar_one_or_none()
@@ -718,7 +720,7 @@ async def create_item(
     datee: date = Form(...),
     banner: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     file_path = os.path.join(UPLOAD_DIR, banner.filename)
     with open(file_path, "wb") as buffer:
@@ -761,7 +763,7 @@ async def update_item(
     id: int,
     data: SeminarKorgazmaUpdate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(SeminarKorgazma).where(SeminarKorgazma.id == id))
     item = result.scalar_one_or_none()
@@ -780,7 +782,7 @@ async def update_item(
 async def delete_item(
     id: int,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(SeminarKorgazma).where(SeminarKorgazma.id == id))
     item = result.scalar_one_or_none()
@@ -843,7 +845,7 @@ async def create_item(
     aloqa: str,
     rasm: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     file_path = os.path.join(UPLOAD_DIR, rasm.filename)
     with open(file_path, "wb") as buffer:
@@ -877,7 +879,7 @@ async def update_item(
     id: int,
     data: KorrupsiyaUpdate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Korrupsiya).where(Korrupsiya.id == id))
     item = result.scalar_one_or_none()
@@ -895,7 +897,7 @@ async def update_item(
 async def delete_item(
     id: int,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Korrupsiya).where(Korrupsiya.id == id))
     item = result.scalar_one_or_none()

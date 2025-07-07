@@ -14,6 +14,8 @@ from .schemas import (InstitutRead, InstitutLocalizedOut,
 
 from fastapi.responses import FileResponse
 
+from check_admin import admin_required
+
 router = APIRouter(prefix="/institut", tags=["Institut haqida"])
 router2 = APIRouter(prefix="/rahbariyat", tags=["Rahbariyat"])
 router3 = APIRouter(prefix="/tashkiliy_tuzilma", tags=["tashkiliy_tuzilma"])
@@ -50,7 +52,7 @@ async def create_institut(
     text_en: str,
     guvonoma: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user),
+    user=Depends(admin_required),
 ):
     path = os.path.join(PDF_UPLOAD, guvonoma.filename)
     with open(path, "wb") as buffer:
@@ -95,7 +97,7 @@ async def view_pdf(
 
 
 @router.delete("/{id}")
-async def delete_institut(id: int, db: AsyncSession = Depends(get_db), user=Depends(get_current_user)):
+async def delete_institut(id: int, db: AsyncSession = Depends(get_db), user=Depends(admin_required)):
     result = await db.execute(select(Institut).where(Institut.id == id))
     item = result.scalar_one_or_none()
     if not item:
@@ -156,7 +158,7 @@ async def create(
     mutaxassisligi_ru: str = "",
     mutaxassisligi_en: str = "",
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     try:
         # ✅ str -> datetime.date
@@ -189,7 +191,7 @@ async def update_rahbariyat(
     id: int,
     data: RahbariyatUpdate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Rahbariyat).where(Rahbariyat.id == id))
     item = result.scalar_one_or_none()
@@ -207,7 +209,7 @@ async def update_rahbariyat(
 async def delete_rahbariyat(
     id: int,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Rahbariyat).where(Rahbariyat.id == id))
     item = result.scalar_one_or_none()
@@ -253,7 +255,7 @@ async def create(
     desc_en: str,
     tuzilma: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     path = os.path.join(IMG_UPLOAD, tuzilma.filename)
     with open(path, "wb") as buffer:
@@ -271,7 +273,7 @@ async def create(
     return item
 
 @router3.delete("/{id}")
-async def delete_item(id: int, db: AsyncSession = Depends(get_db), user=Depends(get_current_user)):
+async def delete_item(id: int, db: AsyncSession = Depends(get_db), user=Depends(admin_required)):
     result = await db.execute(select(TashkiliyTuzilma).where(TashkiliyTuzilma.id == id))
     item = result.scalar_one_or_none()
     if not item:
@@ -331,7 +333,7 @@ async def create(
     email: str,
     rasm: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     path = os.path.join(BOLINMA_UPLOAD, rasm.filename)
     with open(path, "wb") as buffer:
@@ -356,7 +358,7 @@ async def update_bolinma(
     id: int,
     data: TarkibiyBolinmaUpdate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(TarkibiyBolinma).where(TarkibiyBolinma.id == id))
     item = result.scalar_one_or_none()
@@ -374,7 +376,7 @@ async def update_bolinma(
 async def delete_bolinma(
     id: int,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(TarkibiyBolinma).where(TarkibiyBolinma.id == id))
     item = result.scalar_one_or_none()

@@ -6,6 +6,7 @@ from core.deps import get_current_user
 from .models import BoshSahifa
 from .schemas import BoshSahifaCreate, BoshSahifaRead, TranslatedBoshSahifaRead
 
+from check_admin import admin_required
 router = APIRouter(prefix="/bosh_sahifa", tags=["Bosh sahifa"])
 
 
@@ -37,7 +38,7 @@ async def get_all(
 async def create(
     data: BoshSahifaCreate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     item = BoshSahifa(**data.dict())
     db.add(item)
@@ -50,7 +51,7 @@ async def create(
 async def delete(
     id: int,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(BoshSahifa).where(BoshSahifa.id == id))
     item = result.scalar_one_or_none()

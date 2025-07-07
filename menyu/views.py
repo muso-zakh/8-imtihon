@@ -11,6 +11,8 @@ from .schemas import (
 )
 from sqlalchemy.orm import selectinload
 
+from check_admin import admin_required
+
 from fastapi import Header
 
 router5 = APIRouter(prefix="/menu", tags=["Menu"])
@@ -66,7 +68,7 @@ async def get_menu(id: int, lang: str = Header(default="uz"), db: AsyncSession =
 async def create_menu(
     data: MenuCreate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     item = Menu(**data.dict())
     db.add(item)
@@ -80,7 +82,7 @@ async def update_menu(
     id: int,
     data: MenuUpdate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Menu).where(Menu.id == id))
     item = result.scalar_one_or_none()
@@ -99,7 +101,7 @@ async def update_menu(
 async def delete_menu(
     id: int,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Menu).where(Menu.id == id))
     item = result.scalar_one_or_none()
@@ -117,7 +119,7 @@ async def delete_menu(
 async def create_submenu(
     data: SubmenuCreate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     item = Submenu(**data.dict())
     db.add(item)
@@ -131,7 +133,7 @@ async def update_submenu(
     id: int,
     data: SubmenuUpdate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Submenu).where(Submenu.id == id))
     item = result.scalar_one_or_none()
@@ -150,7 +152,7 @@ async def update_submenu(
 async def delete_submenu(
     id: int,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Submenu).where(Submenu.id == id))
     item = result.scalar_one_or_none()

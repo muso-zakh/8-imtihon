@@ -4,6 +4,8 @@ from sqlalchemy.future import select
 from fastapi.responses import FileResponse
 import os, shutil
 
+from check_admin import admin_required
+
 from core.database import get_db
 from core.deps import get_current_user
 from .models import SertifikatlashtirishOrgan
@@ -63,7 +65,7 @@ async def create_item(
     text_en: str = "",
     text_pdf: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     file_path = os.path.join(UPLOAD_DIR, text_pdf.filename)
     with open(file_path, "wb") as buffer:
@@ -98,7 +100,7 @@ async def update_item(
     id: int,
     data: SertifikatlashtirishOrganUpdate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(SertifikatlashtirishOrgan).where(SertifikatlashtirishOrgan.id == id))
     item = result.scalar_one_or_none()
@@ -118,7 +120,7 @@ async def update_item(
 async def delete_item(
     id: int,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(SertifikatlashtirishOrgan).where(SertifikatlashtirishOrgan.id == id))
     item = result.scalar_one_or_none()

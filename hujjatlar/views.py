@@ -14,6 +14,9 @@ from .schemas import (HujjatCreate, HujjatlarLocalizedOut, HujjatUpdate, HujjatR
                        SmetaResursLocalizedOut, SmetaResursRead, SmetaResursUpdate,
                        MalumotnomaRead, MalumotnomaUpdate, MalumotnomaLocalizedOut)
 
+from check_admin import admin_required
+
+
 router6 = APIRouter(prefix="/hujjatlar", tags=["Hujjatlar"])
 router8 = APIRouter(prefix="/qurilish-reglamentlar", tags=["Qurilish Reglamentlar"])
 router9 = APIRouter(prefix="/smeta-resurs", tags=["SmetaResurs"])
@@ -75,7 +78,7 @@ async def create_hujjat(
     desc_en: str = "",
     fayl: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user),
+    user=Depends(admin_required),
 ):
     file_path = os.path.join(UPLOAD_DIR, fayl.filename)
     with open(file_path, "wb") as buffer:
@@ -104,7 +107,7 @@ async def update_hujjat(
     id: int,
     data: HujjatUpdate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Hujjatlar).where(Hujjatlar.id == id))
     item = result.scalar_one_or_none()
@@ -123,7 +126,7 @@ async def update_hujjat(
 async def delete_hujjat(
     id: int,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Hujjatlar).where(Hujjatlar.id == id))
     item = result.scalar_one_or_none()
@@ -201,7 +204,7 @@ async def create_standart(
     konsultatsiya_en: str = None,
     rasm: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user),
+    user=Depends(admin_required),
 ):
     file_path = os.path.join(UPLOAD_DIR, rasm.filename)
     with open(file_path, "wb") as buffer:
@@ -231,7 +234,7 @@ async def update_standart(
     id: int,
     data: StandartUpdate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Standartlar).where(Standartlar.id == id))
     item = result.scalar_one_or_none()
@@ -250,7 +253,7 @@ async def update_standart(
 async def delete_standart(
     id: int,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Standartlar).where(Standartlar.id == id))
     item = result.scalar_one_or_none()
@@ -316,7 +319,7 @@ async def create(
     title_en: str,
     hujjat: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     file_path = os.path.join(UPLOAD_DIR, hujjat.filename)
     with open(file_path, "wb") as buffer:
@@ -338,7 +341,7 @@ async def create(
 
 
 @router8.patch("/{id}", response_model=QurilishReglamentLocalizedOut)
-async def update(id: int, data: QurilishReglamentUpdate, db: AsyncSession = Depends(get_db), user=Depends(get_current_user)):
+async def update(id: int, data: QurilishReglamentUpdate, db: AsyncSession = Depends(get_db), user=Depends(admin_required)):
     result = await db.execute(select(QurilishReglamentlar).where(QurilishReglamentlar.id == id))
     item = result.scalar_one_or_none()
     if not item:
@@ -353,7 +356,7 @@ async def update(id: int, data: QurilishReglamentUpdate, db: AsyncSession = Depe
 
 
 @router8.delete("/{id}")
-async def delete(id: int, db: AsyncSession = Depends(get_db), user=Depends(get_current_user)):
+async def delete(id: int, db: AsyncSession = Depends(get_db), user=Depends(admin_required)):
     result = await db.execute(select(QurilishReglamentlar).where(QurilishReglamentlar.id == id))
     item = result.scalar_one_or_none()
     if not item:
@@ -424,7 +427,7 @@ async def create_smeta_resurs(
     shnq_nomi_en: str,
     fayl: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     file_path = os.path.join(UPLOAD_DIR, fayl.filename)
     with open(file_path, "wb") as buffer:
@@ -452,7 +455,7 @@ async def update_smeta_resurs(
     id: int,
     data: SmetaResursUpdate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(SmetaResurs).where(SmetaResurs.id == id))
     item = result.scalar_one_or_none()
@@ -471,7 +474,7 @@ async def update_smeta_resurs(
 async def delete_smeta_resurs(
     id: int,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(SmetaResurs).where(SmetaResurs.id == id))
     item = result.scalar_one_or_none()
@@ -535,7 +538,7 @@ async def create_malumotnoma(
     nomi_en: str,
     hujjat: UploadFile = File(...),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     file_path = os.path.join(UPLOAD_DIR, hujjat.filename)
     with open(file_path, "wb") as buffer:
@@ -558,7 +561,7 @@ async def update_malumotnoma(
     id: int,
     data: MalumotnomaUpdate,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Malumotnoma).where(Malumotnoma.id == id))
     item = result.scalar_one_or_none()
@@ -577,7 +580,7 @@ async def update_malumotnoma(
 async def delete_malumotnoma(
     id: int,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(admin_required)
 ):
     result = await db.execute(select(Malumotnoma).where(Malumotnoma.id == id))
     item = result.scalar_one_or_none()
