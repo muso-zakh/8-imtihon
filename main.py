@@ -21,6 +21,13 @@ from hujjatlar.views import router10 as malumotnoma_router
 from faoliyatlar.views import router11 as faoliyatlar_router
 
 from xabarlar.views import router12 as elonlar_router
+from xabarlar.views import router13 as yangiliklar_router
+from xabarlar.views import router14 as uchrashuvlar_router
+from xabarlar.views import router15 as tadbirlar_router
+from xabarlar.views import router16 as hamkorliklar_router
+from xabarlar.views import router17 as seminarlar_router
+from xabarlar.views import router18 as korrupsiyalar_router
+
 
 app = FastAPI(title="TMSITI API")
 
@@ -45,6 +52,12 @@ app.include_router(malumotnoma_router)
 app.include_router(faoliyatlar_router)
 
 app.include_router(elonlar_router)
+app.include_router(yangiliklar_router)
+app.include_router(uchrashuvlar_router)
+app.include_router(tadbirlar_router)
+app.include_router(hamkorliklar_router)
+app.include_router(seminarlar_router)
+app.include_router(korrupsiyalar_router)
 
 
 @app.get("/")
