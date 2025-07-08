@@ -12,7 +12,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from check_admin import superadmin_required, admin_required
 
-from .schemas import UserRead, UserCreate
+from .schemas import UserRead, UserCreate, LoginInput
 
 from typing import Optional
 from pydantic import EmailStr
@@ -39,15 +39,18 @@ async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
     token = create_access_token(data={"sub": str(new_user.id)})
     return {"access_token": token, "token_type": "bearer"}
 
+
+
 @router.post("/login", response_model=Token)
-async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
-    user = (await db.execute(select(User).where(User.email == form_data.username))).scalar_one_or_none()
-    if not user or not verify_password(form_data.password, user.hashed_password):
+async def login(data: LoginInput, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(User).where(User.email == data.email))
+    user = result.scalar_one_or_none()
+
+    if not user or not verify_password(data.password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Incorrect credentials")
 
     token = create_access_token(data={"sub": str(user.id)})
     return {"access_token": token, "token_type": "bearer"}
-
 
 
 @router.get("/", response_model=list[UserRead])

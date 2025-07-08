@@ -19,6 +19,8 @@ class BoglanishBase(BaseModel):
     text_en: Optional[str] = None
 
     fayl: Optional[str] = None
+    javob_berildi: Optional[bool] = False
+
 
 
 
@@ -44,11 +46,15 @@ class BoglanishUpdate(BaseModel):
     text_en: Optional[str] = None
 
     fayl: Optional[str] = None
+    javob_berildi: Optional[bool] = False
+
 
 
 class BoglanishRead(BoglanishBase):
     id: int
     created_at: datetime
+    javob_berildi: Optional[bool] = False
+
 
     class Config:
         orm_mode = True
@@ -63,6 +69,8 @@ class BoglanishLocalizedOut(BaseModel):
     text: Optional[str] = None
     fayl: Optional[str] = None
     created_at: datetime
+    javob_berildi: Optional[bool] = False
+
 
     class Config:
         orm_mode = True

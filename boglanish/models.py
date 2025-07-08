@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from core.database import Base
 from datetime import datetime
 
@@ -24,5 +24,6 @@ class Boglanish(Base):
     text_en = Column(String, nullable=True)
 
     fayl = Column(String(255), nullable=True)
+    javob_berildi = Column(Boolean, default=False) 
 
     created_at = Column(DateTime, default=datetime.utcnow)  

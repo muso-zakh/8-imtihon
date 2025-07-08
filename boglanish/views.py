@@ -33,6 +33,7 @@ def get_localized_fields(obj, lang: str):
         "text": getattr(obj, f"text_{lang}"),
         "fayl": obj.fayl,
         "created_at": obj.created_at,
+        "javob_berildi": obj.javob_berildi,
     }
 
 
